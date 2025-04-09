@@ -1,0 +1,43 @@
+server:
+  port: 8081
+
+#spring:
+#  jpa:
+#    hibernate:
+ #     ddl-auto: none
+ # datasource:
+ #   url: jdbc:postgresql://user_db:5432/user_db
+ #   username: root
+ #   password: root
+ #   driver-class-name: org.postgresql.Driver
+ # flyway:
+ #   enabled: true
+ #   url: jdbc:postgresql://user_db:5432/user_db
+ #   user: root
+ #   password: root
+
+springdoc:
+  swagger-ui:
+    enabled: true
+    path: /api/v1/swagger-ui.html
+  api-docs:
+    path: /v3/api-docs
+    enabled: true
+  packages-to-scan: com.example.user_service.controller
+
+logging:
+  level:
+    org.springdoc: DEBUG
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    export:
+      simple:
+        enabled: true
