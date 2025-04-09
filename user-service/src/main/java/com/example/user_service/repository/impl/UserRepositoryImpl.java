@@ -11,7 +11,7 @@ import java.util.Optional;
 public class UserRepositoryImpl extends SimpleListRepositoryImpl<UserEntity,Long> implements UserRepository {
 
     public UserRepositoryImpl() {
-        super(UserEntity::getId);
+        super(UserEntity::getId, UserEntity::setId);
     }
 
     @Override
