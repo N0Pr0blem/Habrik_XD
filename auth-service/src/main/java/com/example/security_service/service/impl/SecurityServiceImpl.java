@@ -5,6 +5,7 @@ import com.example.security_service.dto.user.UserResponseDto;
 import com.example.security_service.exception.AuthException;
 import com.example.security_service.model.TokenDetails;
 import com.example.security_service.service.SecurityService;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +31,7 @@ public class SecurityServiceImpl implements SecurityService {
 
     @Override
     public TokenDetails authenticate(String username, String password) {
-        UserResponseDto userResponseDto = userClient.getAllUsers(username).getFirst();
+        UserResponseDto userResponseDto = userClient.getAllUsers(username).get(0);
         if(!userResponseDto.getIsActive()){
             throw new AuthException("Account disabled","ACCOUNT_DISABLED");
         }
@@ -38,7 +39,33 @@ public class SecurityServiceImpl implements SecurityService {
             throw new AuthException("Invalid password","INVALID_PASSWORD");
         }
 
-        return generateToken();
+        return generateToken(userResponseDto).toBuilder()
+                .id(userResponseDto.getId())
+                .role(userResponseDto.getRole())
+                .build();
+    }
+
+    @Override
+    public boolean validateToken(String token) {
+        try {
+            if (token != null && token.startsWith("Bearer ")) {
+                token = token.substring(7);
+            }
+
+            Jwts.parser()
+                    .setSigningKey(Base64.getEncoder().encodeToString(secret.getBytes()))
+                    .build()
+                    .parseClaimsJws(token);
+
+
+            return true;
+        } catch (ExpiredJwtException e) {
+            System.err.println("Token expired: " + e.getMessage());
+            return false;
+        } catch (Exception e) {
+            System.err.println("Token validation error: " + e.getMessage());
+            return false;
+        }
     }
 
     private TokenDetails generateToken(UserResponseDto userResponseDto){
@@ -74,5 +101,14 @@ public class SecurityServiceImpl implements SecurityService {
                 .expiredAt(expirationDate)
                 .issuedAt(createdDate)
                 .build();
+    }
+
+    public String getUsernameFromToken(String token) {
+        return Jwts.parser()
+                .setSigningKey(Base64.getEncoder().encodeToString(secret.getBytes()))
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
     }
 }

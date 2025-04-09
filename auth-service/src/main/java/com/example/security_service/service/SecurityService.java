@@ -4,4 +4,8 @@ import com.example.security_service.model.TokenDetails;
 
 public interface SecurityService {
     TokenDetails authenticate(String username, String password);
+
+    boolean validateToken(String token);
+
+    String getUsernameFromToken(String token);
 }

@@ -11,3 +11,29 @@ jwt:
   expiration: 7200
   issuer: SECURITY_SERVICE
 
+
+springdoc:
+  swagger-ui:
+    enabled: true
+    path: /api/v1/swagger-ui.html
+  api-docs:
+    path: /v3/api-docs
+    enabled: true
+  packages-to-scan: com.example.security_service.controller
+
+logging:
+  level:
+    org.springdoc: DEBUG
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    export:
+      simple:
+        enabled: true
