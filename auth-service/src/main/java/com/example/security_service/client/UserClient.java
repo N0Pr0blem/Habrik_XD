@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-@FeignClient(name = "user-service", url = "http://localhost:8081/api/v1/users")
+@FeignClient(name = "user-service", url = "http://user-service:8081/api/v1/users")
 public interface UserClient {
     @GetMapping("{id}")
     Optional<UserResponseDto> getUserById(@PathVariable Long id);
