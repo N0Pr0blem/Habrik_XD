@@ -6,6 +6,7 @@ import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
 import io.minio.errors.*;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.compress.compressors.FileNameUtil;
 import org.apache.commons.compress.utils.FileNameUtils;
 import org.apache.log4j.LogManager;
@@ -21,7 +22,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ImageServiceImpl implements ImageService {
     @Autowired
     MinioClient minioClient;
