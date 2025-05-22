@@ -9,6 +9,8 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -29,14 +31,24 @@ public class SecurityServiceImpl implements SecurityService {
     @Value("${jwt.issuer}")
     private String issuer;
 
+    private Logger logger = LogManager.getLogger(SecurityServiceImpl.class);
+
     @Override
     public TokenDetails authenticate(String username, String password) {
-        UserResponseDto userResponseDto = userClient.getAllUsers(username).get(0);
-        if(!userResponseDto.getIsActive()){
-            throw new AuthException("Account disabled","ACCOUNT_DISABLED");
+        logger.info("Login request - "+username);
+//     UserResponseDto userResponseDto = userClient.getAllUsers(username).get(0);
+       UserResponseDto userResponseDto = userClient.getAllUsers(username)
+                .stream()
+               .filter(user -> user.getUsername().equals(username))
+              .findFirst()
+                .get();
+        logger.info("User try to login - " + userResponseDto.toString());
+        if (!userResponseDto.getIsActive()) {
+            throw new AuthException("Account disabled", "ACCOUNT_DISABLED");
         }
-        if(!userResponseDto.getPassword().equals(passwordEncoder.encode(password))){
-            throw new AuthException("Invalid password","INVALID_PASSWORD");
+        logger.info("Is password right - "+userResponseDto.getPassword().equals(passwordEncoder.encode(password)));
+        if (!userResponseDto.getPassword().equals(passwordEncoder.encode(password))) {
+            throw new AuthException("Invalid password", "INVALID_PASSWORD");
         }
 
         return generateToken(userResponseDto).toBuilder()
@@ -68,20 +80,20 @@ public class SecurityServiceImpl implements SecurityService {
         }
     }
 
-    private TokenDetails generateToken(UserResponseDto userResponseDto){
-        Map<String,Object> claims = new HashMap<>() {{
-            put("role",userResponseDto.getRole());
-            put("username",userResponseDto.getUsername());
+    private TokenDetails generateToken(UserResponseDto userResponseDto) {
+        Map<String, Object> claims = new HashMap<>() {{
+            put("role", userResponseDto.getRole());
+            put("username", userResponseDto.getUsername());
         }};
 
-        return generateToken(claims,userResponseDto.getId().toString());
+        return generateToken(claims, userResponseDto.getId().toString());
     }
 
     private TokenDetails generateToken(Map<String, Object> claims, String subject) {
-        long expirationTimeInMillis = expirationInSeconds*1000L;
-        Date expirationDate = new Date(new Date().getTime()+expirationTimeInMillis);
+        long expirationTimeInMillis = expirationInSeconds * 1000L;
+        Date expirationDate = new Date(new Date().getTime() + expirationTimeInMillis);
 
-        return generateToken(expirationDate,claims,subject);
+        return generateToken(expirationDate, claims, subject);
     }
 
     private TokenDetails generateToken(Date expirationDate, Map<String, Object> claims, String subject) {
