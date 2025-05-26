@@ -12,4 +12,6 @@ echo "Starting Maven build..."
 mvn clean install -T 1C
 
 echo "Starting containers..."
-sudo docker-compose up --build
+sudo docker-compose up --build -d
+
+sudo docker ps

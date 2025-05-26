@@ -34,12 +34,17 @@ public class ImageServiceImpl implements ImageService {
 
 
     @Override
-    public String save(ImageFolderType folder, String subfolder, MultipartFile image) throws ServerException, InsufficientDataException, ErrorResponseException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException, IOException {
+    public String save(String folder, String subfolder, MultipartFile image) throws ServerException, InsufficientDataException, ErrorResponseException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException, IOException {
+        logger.info("---Request to upload image---");
         String extension = FileNameUtils.getExtension(image.getOriginalFilename());
+        logger.info("- extension: "+extension);
         String fileName = UUID.randomUUID()+"."+extension;
+        logger.info("- filename: "+fileName);
         String path = folder+"/"+subfolder+"/"+fileName;
+        logger.info("- path: "+path);
 
         if (!image.getContentType().startsWith("image/")) {
+            logger.error("---Error--- ");
             throw new RuntimeException("Wrong file type. It should be image.");
         }
 
@@ -50,7 +55,7 @@ public class ImageServiceImpl implements ImageService {
                 .stream(image.getInputStream(), image.getSize(), -1)
                 .build());
 
-
+        logger.info("---Success---: "+path);
         return path;
     }
 
