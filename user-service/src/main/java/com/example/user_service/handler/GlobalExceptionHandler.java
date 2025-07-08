@@ -2,6 +2,8 @@ package com.example.user_service.handler;
 
 import com.example.user_service.exception.ApiException;
 import com.example.user_service.exception.UserAddException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -9,10 +11,14 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    @Autowired
+    private MessageSource messageSource;
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String,String>> handleValidationException(MethodArgumentNotValidException ex){
@@ -24,15 +30,15 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(UserAddException.class)
-    public ResponseEntity<Map<String, String>> handleUserAddException(UserAddException ex) {
+    public ResponseEntity<String> handleUserAddException(UserAddException ex, Locale locale) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(Map.of(ex.getErrorCode(), ex.getMessage()));
+                .body(messageSource.getMessage(ex.getMessageCode(), ex.getArgs(), locale));
     }
 
     @ExceptionHandler(ApiException.class)
-    public ResponseEntity<Map<String, String>> handleApiException(ApiException ex) {
+    public ResponseEntity<String> handleApiException(ApiException ex, Locale locale) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(Map.of(ex.getErrorCode(), ex.getMessage()));
+                .body(messageSource.getMessage(ex.getMessageCode(), ex.getArgs(), locale));
     }
 
     @ExceptionHandler(RuntimeException.class)
