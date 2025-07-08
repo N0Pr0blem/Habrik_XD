@@ -25,7 +25,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserEntity getUserById(Long userId) {
         return userRepository.findById(userId)
-                .orElseThrow(() -> new ApiException("error.user.not_found", "GETTING_USER_EXCEPTION"));
+                .orElseThrow(() -> new ApiException("error.user.not_found", userId,"GETTING_USER_EXCEPTION"));
     }
 
     @Override
