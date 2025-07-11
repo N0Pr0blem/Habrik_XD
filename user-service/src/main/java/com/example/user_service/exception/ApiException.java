@@ -4,11 +4,11 @@ import lombok.Getter;
 
 @Getter
 public class ApiException extends RuntimeException{
-    protected String errorCode;
+    private final String messageCode;
+    private final Object[] args;
 
-    public ApiException(String message, String errorCode) {
-        super(message);
-        this.errorCode = errorCode;
+    public ApiException(String messageCode, Object... args) {
+        this.messageCode = messageCode;
+        this.args = args;
     }
-
 }

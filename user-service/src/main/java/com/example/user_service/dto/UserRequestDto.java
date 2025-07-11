@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Data;
 
@@ -11,16 +12,18 @@ import lombok.Data;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @Builder(toBuilder = true)
 public class UserRequestDto {
-    @NotBlank(message = "Username is mandatory")
+    @NotBlank(message = "{error.user.dto.valid.username.not_blank}")
+    @Size(max=64, min=2, message = "{error.user.dto.valid.username.size}")
     private String username;
 
-    @NotBlank(message = "Password is mandatory")
+    @NotBlank(message = "{error.user.dto.valid.password.not_blank}")
+    @Size(max=256, min=8, message = "{error.user.dto.valid.password.size}")
     private String password;
 
-    @NotBlank(message = "Email is mandatory")
-    @Email(message = "This is not email")
+    @NotBlank(message = "{error.user.dto.valid.email.not_blank}")
+    @Email(message = "{error.user.dto.valid.email.not_email}")
     private String email;
 
-    @NotBlank(message = "Role is mandatory")
+    @NotBlank(message = "{error.user.dto.valid.role.not_blank}")
     private String role;
 }
