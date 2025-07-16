@@ -9,9 +9,15 @@ import com.example.article_service.model.Tag;
 import com.example.article_service.util.DiffUtils;
 import com.example.article_service.util.MarkdownUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -24,6 +30,12 @@ public class ArticleService {
 
     public ArticleService(ArticleRepo articleRepo) {
         this.articleRepo = articleRepo;
+    }
+
+    public Page<ArticleResponse> getArticlesFeed (int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Article> articlePage = articleRepo.findAll(pageable);
+        return articlePage.map(this::mapArticleToResponse);
     }
 
     public ArticleResponse createNewArticle (ArticleRequest articleRequest) {

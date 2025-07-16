@@ -3,7 +3,9 @@ package com.example.article_service.controller;
 import com.example.article_service.DTO.ArticleRequest;
 import com.example.article_service.DTO.ArticleResponse;
 import com.example.article_service.exception.InvalidSlugException;
+import com.example.article_service.model.Article;
 import com.example.article_service.service.ArticleService;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +18,12 @@ public class ArticleController {
 
     public ArticleController(ArticleService articleService) {
         this.articleService = articleService;
+    }
+
+    @GetMapping
+    public Page<ArticleResponse> getArticleFeed(@RequestParam(defaultValue = "1") int size,
+                                        @RequestParam(defaultValue = "1") int page) {
+       return articleService.getArticlesFeed(page, size);
     }
 
     @PostMapping("/create")
