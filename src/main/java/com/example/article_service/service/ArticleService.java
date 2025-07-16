@@ -1,5 +1,6 @@
 package com.example.article_service.service;
 
+import com.example.article_service.DTO.ArticlePreview;
 import com.example.article_service.DTO.ArticleRequest;
 import com.example.article_service.DTO.ArticleResponse;
 import com.example.article_service.exception.ArticleNotFoundException;
@@ -10,14 +11,11 @@ import com.example.article_service.util.DiffUtils;
 import com.example.article_service.util.MarkdownUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
 
 @Service
@@ -32,10 +30,10 @@ public class ArticleService {
         this.articleRepo = articleRepo;
     }
 
-    public Page<ArticleResponse> getArticlesFeed (int page, int size) {
+    public Page<ArticlePreview> getArticlesFeed (int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Article> articlePage = articleRepo.findAll(pageable);
-        return articlePage.map(this::mapArticleToResponse);
+        return articlePage.map(this::mapArticleToPreview);
     }
 
     public ArticleResponse createNewArticle (ArticleRequest articleRequest) {
@@ -47,6 +45,8 @@ public class ArticleService {
         Article newArticle = new Article(
                 articleSlug,
                 articleRequest.getTitle(),
+                articleRequest.getPreviewImageUrl(),
+                articleRequest.getPreview(),
                 articleRequest.getContent(),
                 parsedTags,
                 moscowTime, articleRequest.getAuthorId());
@@ -55,18 +55,23 @@ public class ArticleService {
         return mapArticleToResponse(savedArticle);
     }
 
-    private ArticleResponse mapArticleToResponse(Article article) {
+    public ArticleResponse getArticleResponseById (Long id) {
+        Article article = articleRepo.getArticleById(id).orElseThrow(() ->
+                new ArticleNotFoundException("Article not found: " + id));
+        article.setViews(article.getViews() + 1);
+        articleRepo.save(article);
+        return mapArticleToResponse(article);
+    }
 
+    private ArticleResponse mapArticleToResponse (Article article) {
         final Set<String> stringTags = tagService.parseTagToString(article.getTags());
         final String articleHtmlContent = MarkdownUtils.toHtml(article.getContent());
 
-        return new ArticleResponse(article.getId(), article.getSlug(), article.getTitle(), articleHtmlContent,
+        return new ArticleResponse(article.getId(), article.getSlug(), article.getTitle(), article.getPreview(), articleHtmlContent,
                 stringTags, article.getAuthorId(), article.getCreatedAt(), article.getUpdatedAt());
     }
 
-    public ArticleResponse getArticleResponseById(Long id) {
-        Article article = articleRepo.getArticleById(id).orElseThrow(() ->
-                new ArticleNotFoundException("Article not found: " + id));
-        return mapArticleToResponse(article);
+    private ArticlePreview mapArticleToPreview (Article article) {
+        return new ArticlePreview(article.getId(), article.getPreview(), article.getViews(), article.getPreviewImageUrl());
     }
 }

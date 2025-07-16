@@ -11,19 +11,18 @@ public class ArticleResponse {
     private Long id;
     private String slug;
     private String title;
+    private String preview;
     private String content;
     private Set<String> tags;
     private Long authorId;
     private Date createdAt;
     private Date updatedAt;
 
-    public ArticleResponse() {
-    }
-
-    public ArticleResponse(Long id, String slug, String title, String content, Set<String> tags, Long authorId, Date createdAt, Date updatedAt) {
+    public ArticleResponse(Long id, String slug, String title, String preview, String content, Set<String> tags, Long authorId, Date createdAt, Date updatedAt) {
         this.id = id;
         this.slug = slug;
         this.title = title;
+        this.preview = preview;
         this.content = content;
         this.tags = tags;
         this.authorId = authorId;
@@ -93,5 +92,13 @@ public class ArticleResponse {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public String getPreview() {
+        return preview;
+    }
+
+    public void setPreview(String preview) {
+        this.preview = preview;
     }
 }

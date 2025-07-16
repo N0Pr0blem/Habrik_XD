@@ -1,9 +1,9 @@
 package com.example.article_service.controller;
 
+import com.example.article_service.DTO.ArticlePreview;
 import com.example.article_service.DTO.ArticleRequest;
 import com.example.article_service.DTO.ArticleResponse;
 import com.example.article_service.exception.InvalidSlugException;
-import com.example.article_service.model.Article;
 import com.example.article_service.service.ArticleService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -21,8 +21,8 @@ public class ArticleController {
     }
 
     @GetMapping
-    public Page<ArticleResponse> getArticleFeed(@RequestParam(defaultValue = "1") int size,
-                                        @RequestParam(defaultValue = "1") int page) {
+    public Page<ArticlePreview> getArticleFeed(@RequestParam(defaultValue = "1") int size,
+                                               @RequestParam(defaultValue = "1") int page) {
        return articleService.getArticlesFeed(page, size);
     }
 
@@ -36,7 +36,6 @@ public class ArticleController {
     @GetMapping("/{id}/{slug}")
     public ArticleResponse getArticle(@PathVariable Long id, @PathVariable String slug) {
         ArticleResponse articleResponse = articleService.getArticleResponseById(id);
-
         if (!articleResponse.getSlug().equals(slug)) {
             throw new InvalidSlugException("Неверный slug");
         }

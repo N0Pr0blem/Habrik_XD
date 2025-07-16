@@ -15,7 +15,10 @@ public class Article {
     private Long id;
     private String slug;
     private String title;
+    private String previewImageUrl;
+    private String preview;
     private String content;
+    private Integer views;
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "article_tags", joinColumns = @JoinColumn(name = "article_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
@@ -28,14 +31,17 @@ public class Article {
     public Article() {
     }
 
-    public Article(String slug, String title, String content, Set<Tag> tags, Date createdAt, Long authorId) {
+    public Article(String slug, String title, String previewImageUrl, String preview, String content, Set<Tag> tags, Date createdAt, Long authorId) {
         this.slug = slug;
         this.title = title;
+        this.previewImageUrl = previewImageUrl;
+        this.preview = preview;
         this.content = content;
         this.tags = tags;
         this.createdAt = createdAt;
         this.updatedAt = null;
         this.authorId = authorId;
+        this.views = 0;
     }
 
     public Long getId() {
@@ -100,5 +106,29 @@ public class Article {
 
     public void setAuthorId(Long authorId) {
         this.authorId = authorId;
+    }
+
+    public String getPreview() {
+        return preview;
+    }
+
+    public void setPreview(String preview) {
+        this.preview = preview;
+    }
+
+    public String getPreviewImageUrl() {
+        return previewImageUrl;
+    }
+
+    public void setPreviewImageUrl(String previewImageUrl) {
+        this.previewImageUrl = previewImageUrl;
+    }
+
+    public Integer getViews() {
+        return views;
+    }
+
+    public void setViews(Integer views) {
+        this.views = views;
     }
 }

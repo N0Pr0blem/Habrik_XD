@@ -1,6 +1,5 @@
 package com.example.article_service.DTO;
 
-import com.example.article_service.model.Tag;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
@@ -10,15 +9,16 @@ import java.util.List;
 public class ArticleRequest {
     private String title;
     private String content;
+    private String previewImageUrl;
+    private String preview;
     private List<String> tags;
     private Long authorId;
 
-    public ArticleRequest() {
-    }
-
-    public ArticleRequest(String title, String content, List<String> tags, Long authorId) {
+    public ArticleRequest(String title, String content, String previewImageUrl, String preview, List<String> tags, Long authorId) {
         this.title = title;
         this.content = content;
+        this.previewImageUrl = previewImageUrl;
+        this.preview = preview;
         this.tags = tags;
         this.authorId = authorId;
     }
@@ -53,5 +53,21 @@ public class ArticleRequest {
 
     public void setAuthorId(Long authorId) {
         this.authorId = authorId;
+    }
+
+    public String getPreview() {
+        return preview;
+    }
+
+    public void setPreview(String preview) {
+        this.preview = preview;
+    }
+
+    public String getPreviewImageUrl() {
+        return previewImageUrl;
+    }
+
+    public void setPreviewImageUrl(String previewImageUrl) {
+        this.previewImageUrl = previewImageUrl;
     }
 }
