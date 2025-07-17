@@ -20,6 +20,6 @@ public interface UserClient {
     UserResponseDto addUser(@RequestBody UserRequestDto userRequestDto);
 
     @GetMapping()
-    List<UserResponseDto> getAllUsers(@RequestParam String name);
+    List<UserResponseDto> getAllUsers(@RequestParam String username);
 
 }

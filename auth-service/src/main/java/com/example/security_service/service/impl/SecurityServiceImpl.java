@@ -5,6 +5,7 @@ import com.example.security_service.dto.user.UserResponseDto;
 import com.example.security_service.exception.AuthException;
 import com.example.security_service.model.TokenDetails;
 import com.example.security_service.service.SecurityService;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -35,18 +36,13 @@ public class SecurityServiceImpl implements SecurityService {
 
     @Override
     public TokenDetails authenticate(String username, String password) {
-        logger.info("Login request - "+username);
-//     UserResponseDto userResponseDto = userClient.getAllUsers(username).get(0);
-       UserResponseDto userResponseDto = userClient.getAllUsers(username)
-                .stream()
-               .filter(user -> user.getUsername().equals(username))
-              .findFirst()
-                .get();
+        logger.info("Login request - " + username);
+        UserResponseDto userResponseDto = userClient.getAllUsers(username).get(0);
         logger.info("User try to login - " + userResponseDto.toString());
         if (!userResponseDto.getIsActive()) {
             throw new AuthException("Account disabled", "ACCOUNT_DISABLED");
         }
-        logger.info("Is password right - "+userResponseDto.getPassword().equals(passwordEncoder.encode(password)));
+        logger.info("Is password right - " + userResponseDto.getPassword().equals(passwordEncoder.encode(password)));
         if (!userResponseDto.getPassword().equals(passwordEncoder.encode(password))) {
             throw new AuthException("Invalid password", "INVALID_PASSWORD");
         }
@@ -116,11 +112,21 @@ public class SecurityServiceImpl implements SecurityService {
     }
 
     public String getUsernameFromToken(String token) {
+        return getClaims(token)
+                .get("username", String.class);
+    }
+
+    @Override
+    public String getRoleFromToken(String token) {
+        return getClaims(token)
+                .get("role", String.class);
+    }
+
+    private Claims getClaims(String token){
         return Jwts.parser()
                 .setSigningKey(Base64.getEncoder().encodeToString(secret.getBytes()))
                 .build()
                 .parseClaimsJws(token)
-                .getBody()
-                .getSubject();
+                .getBody();
     }
 }

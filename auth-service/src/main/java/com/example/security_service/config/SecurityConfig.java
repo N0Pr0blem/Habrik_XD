@@ -20,10 +20,6 @@ public class SecurityConfig {
             "/api/v1/auth/login",
             "/api/v1/auth/up/**",
             "/api/v1/auth/activate/*",
-            "/api/v1/swagger-ui/*",
-            "/api/v1/swagger-ui.html",
-            "/webjars/swagger-ui/**",
-            "/v3/api-docs/**"
     };
 
     @Bean
@@ -33,9 +29,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(publicRoutes).permitAll()
                         .requestMatchers("/api/v1/users/**").hasAuthority("ADMIN")
-                        .requestMatchers("/api/v1/foods/**").hasAnyAuthority("USER", "ADMIN")
-                        .requestMatchers("/api/v1/swagger-ui.html/**").hasAnyAuthority("USER", "ADMIN")
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
                 );
 
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
