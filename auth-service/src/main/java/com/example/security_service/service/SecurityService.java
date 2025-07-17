@@ -8,4 +8,6 @@ public interface SecurityService {
     boolean validateToken(String token);
 
     String getUsernameFromToken(String token);
+
+    String getRoleFromToken(String token);
 }
