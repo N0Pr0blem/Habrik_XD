@@ -26,4 +26,6 @@ public class UserRequestDto {
 
     @NotBlank(message = "{error.user.dto.valid.role.not_blank}")
     private String role;
+
+    private String image;
 }

@@ -2,7 +2,9 @@ package com.example.user_service.service;
 
 import com.example.user_service.dto.UserFilter;
 import com.example.user_service.dto.UserRequestDto;
+import com.example.user_service.dto.UserUpdateDto;
 import com.example.user_service.model.UserEntity;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
@@ -19,4 +21,6 @@ public interface UserService {
     UserEntity getUserByUsername(String name);
 
     List<UserEntity> getAllUsers(UserFilter filter, Pageable pageable);
+
+    UserEntity updateUser(Long userId, UserUpdateDto userUpdateDto);
 }

@@ -21,4 +21,5 @@ public class UserEntity {
     private String email;
     private String role;
     private Boolean isActive;
+    private String image;
 }
