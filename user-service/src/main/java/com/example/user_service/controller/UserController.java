@@ -3,7 +3,9 @@ package com.example.user_service.controller;
 import com.example.user_service.dto.UserFilter;
 import com.example.user_service.dto.UserRequestDto;
 import com.example.user_service.dto.UserResponseDto;
+import com.example.user_service.dto.UserUpdateDto;
 import com.example.user_service.mapper.UserMapper;
+import com.example.user_service.model.UserEntity;
 import com.example.user_service.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -82,5 +84,15 @@ public class UserController {
         userService.deleteById(userId);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(messageSource.getMessage("message.user.successfully_delete",new Object[]{userId},locale));
+    }
+
+    @PatchMapping("/{userId}")
+    @Operation(description = "Delete user by id")
+    public ResponseEntity<UserResponseDto> updateUserById(@PathVariable(name = "userId") Long userId,
+                                                 @Valid @RequestBody UserUpdateDto userUpdateDto,
+                                                 Locale locale) {
+        UserEntity userEntity = userService.updateUser(userId,userUpdateDto);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(userMapper.toDto(userEntity));
     }
 }

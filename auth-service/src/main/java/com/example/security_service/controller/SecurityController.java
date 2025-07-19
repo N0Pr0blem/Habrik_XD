@@ -20,14 +20,17 @@ public class SecurityController {
     public ResponseEntity<ValidateTokenDto> isTokenValid(@RequestParam String token) {
         boolean validateResult = securityService.validateToken(token);
         String username = "", role = "";
+        Long id = 0L;
         if (validateResult) {
             username = securityService.getUsernameFromToken(token);
             role = securityService.getRoleFromToken(token);
+            id = securityService.getIdFromToken(token);
         }
         return ResponseEntity.ok(ValidateTokenDto.builder()
                 .isValid(validateResult)
                 .username(username)
                 .role(role)
+                .id(id)
                 .build());
     }
 }

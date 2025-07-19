@@ -116,6 +116,12 @@ public class SecurityServiceImpl implements SecurityService {
                 .get("username", String.class);
     }
 
+    public Long getIdFromToken(String token) {
+        return Long.parseLong(getClaims(token)
+                .getSubject());
+
+    }
+
     @Override
     public String getRoleFromToken(String token) {
         return getClaims(token)

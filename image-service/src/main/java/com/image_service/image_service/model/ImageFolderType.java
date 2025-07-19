@@ -6,7 +6,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum ImageFolderType {
-    SYSTEM("system"),USER("users");
-
-    String title;
+    SYSTEM,    //image for front
+    USER,      //image of user's profile
+    ARTICLE;   //image from article
 }

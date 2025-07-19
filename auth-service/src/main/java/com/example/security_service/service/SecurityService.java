@@ -10,4 +10,6 @@ public interface SecurityService {
     String getUsernameFromToken(String token);
 
     String getRoleFromToken(String token);
+
+    Long getIdFromToken(String token);
 }

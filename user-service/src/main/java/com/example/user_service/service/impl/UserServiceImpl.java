@@ -2,6 +2,7 @@ package com.example.user_service.service.impl;
 
 import com.example.user_service.dto.UserFilter;
 import com.example.user_service.dto.UserRequestDto;
+import com.example.user_service.dto.UserUpdateDto;
 import com.example.user_service.exception.ApiException;
 import com.example.user_service.exception.UserAddException;
 import com.example.user_service.model.UserEntity;
@@ -25,7 +26,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserEntity getUserById(Long userId) {
         return userRepository.findById(userId)
-                .orElseThrow(() -> new ApiException("error.user.not_found", userId,"GETTING_USER_EXCEPTION"));
+                .orElseThrow(() -> new ApiException("error.user.not_found", userId, "GETTING_USER_EXCEPTION"));
     }
 
     @Override
@@ -62,7 +63,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserEntity getUserByUsername(String name) {
         return userRepository.findByUsername(name)
-                .orElseThrow(()-> new ApiException("error.user.username.not_found", name, "NO_SUCH_USER"));
+                .orElseThrow(() -> new ApiException("error.user.username.not_found", name, "NO_SUCH_USER"));
     }
 
     @Override
@@ -70,6 +71,23 @@ public class UserServiceImpl implements UserService {
         Specification<UserEntity> spec = buildSpecification(filter);
 
         return userRepository.findAll(spec, pageable).stream().toList();
+    }
+
+    @Override
+    public UserEntity updateUser(Long userId, UserUpdateDto userUpdateDto) {
+        UserEntity user = getUserById(userId);
+
+        if (userUpdateDto.getImage() != null && !userUpdateDto.getImage().isEmpty()) {
+            user.setImage(userUpdateDto.getImage());
+        }
+        if (userUpdateDto.getRole() != null && !userUpdateDto.getRole().isEmpty()) {
+            user.setRole(userUpdateDto.getRole());
+        }
+        if (userUpdateDto.getPassword() != null && !userUpdateDto.getPassword().isEmpty()) {
+            user.setPassword(userUpdateDto.getPassword());
+        }
+
+        return userRepository.save(user);
     }
 
     private Specification<UserEntity> buildSpecification(UserFilter filter) {
