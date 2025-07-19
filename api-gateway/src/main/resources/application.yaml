@@ -21,6 +21,12 @@ spring:
             - Path=/api/v1/auth/**
           filters:
             - RewritePath=/api/v1/auth/(?<segment>.*), /api/v1/auth/$\{segment}
+        - id: image-service
+          uri: http://image-service:8083
+          predicates:
+            - Path=/api/v1/images/**
+          filters:
+            - RewritePath=/api/v1/images/(?<segment>.*), /api/v1/images/$\{segment}
 auth:
   service:
     url: http://auth-service:8082

@@ -22,10 +22,15 @@ public class SecurityConfig {
     private final String[] publicRoutes = {
             "/api/v1/auth/register",
             "/api/v1/auth/login",
-            "/api/v1/auth/up/**",
-            "/api/v1/auth/activate/*",
-            "/v3/api-docs/**",
-            "/swagger-ui/**"
+            "/api/v1/security/validate",
+    };
+
+    private final String[] authenticateRoutes = {
+            "/api/v1/images/**"
+    };
+
+    private final String[] adminRoutes = {
+            "/api/v1/users/**"
     };
 
     @Bean
@@ -39,7 +44,8 @@ public class SecurityConfig {
                 .formLogin(ServerHttpSecurity.FormLoginSpec::disable)
                 .authorizeExchange(exchanges -> exchanges
                         .pathMatchers(publicRoutes).permitAll()
-                        .pathMatchers("/api/v1/users/**").hasRole("ADMIN")
+                        .pathMatchers(adminRoutes).hasRole("ADMIN")
+                        .pathMatchers(authenticateRoutes).authenticated()
                         .anyExchange().authenticated()
                 )
                 .addFilterAt(jwtFilter, SecurityWebFiltersOrder.AUTHENTICATION)
