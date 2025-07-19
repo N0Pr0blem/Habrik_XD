@@ -56,7 +56,7 @@ services:
   user-service:
     build: ./user-service
     ports:
-      - "8084:8084"
+      - "8081:8081"
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-user:5432/user_db
       SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
