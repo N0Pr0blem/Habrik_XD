@@ -10,6 +10,7 @@ import lombok.Data;
 @Builder(toBuilder = true)
 public class ValidateTokenDto {
     private Boolean isValid;
+    private Long id;
     private String username;
     private String role;
 }
