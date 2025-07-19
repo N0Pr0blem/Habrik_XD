@@ -1,11 +1,14 @@
 package com.image_service.image_service.service.impl;
 
+import com.image_service.image_service.client.SecurityClient;
+import com.image_service.image_service.dto.ValidateTokenDto;
 import com.image_service.image_service.model.ImageFolderType;
 import com.image_service.image_service.service.ImageService;
 import io.minio.GetObjectArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
 import io.minio.errors.*;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -27,8 +30,8 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class ImageServiceImpl implements ImageService {
-    @Autowired
-    MinioClient minioClient;
+    private final MinioClient minioClient;
+    private final SecurityClient securityClient;
 
     @Value("${minio.bucket-name}")
     String bucketName;
@@ -37,13 +40,15 @@ public class ImageServiceImpl implements ImageService {
 
 
     @Override
-    public String save(String folder, String subfolder, MultipartFile image) throws ServerException, InsufficientDataException, ErrorResponseException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException, IOException {
+    public String save(String folder, MultipartFile image,HttpServletRequest httpServletRequest) throws ServerException, InsufficientDataException, ErrorResponseException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException, IOException {
+        ValidateTokenDto tokenDto = extractDataFromToken(httpServletRequest);
+
         logger.info("---Request to upload image---");
         String extension = FileNameUtils.getExtension(image.getOriginalFilename());
         logger.info("- extension: " + extension);
         String fileName = UUID.randomUUID() + "." + extension;
         logger.info("- filename: " + fileName);
-        String path = folder + "/" + subfolder + "/" + fileName;
+        String path = folder + "/" + tokenDto.getUsername() + "/" + fileName;
         logger.info("- path: " + path);
 
         if (!image.getContentType().startsWith("image/")) {
@@ -77,5 +82,22 @@ public class ImageServiceImpl implements ImageService {
     @Override
     public void delete(String path) {
 
+    }
+
+    private ValidateTokenDto extractDataFromToken(HttpServletRequest request) {
+        String authHeader = request.getHeader("Authorization");
+
+        if (authHeader == null || authHeader.isBlank()) {
+            throw new IllegalArgumentException("Authorization header is missing");
+        }
+
+        if (!authHeader.startsWith("Bearer ")) {
+            throw new IllegalArgumentException("Invalid token format (expected 'Bearer <token>')");
+        }
+
+        String token = authHeader.substring(7);
+
+        return securityClient.validateToken(token)
+                .orElseThrow(()->new RuntimeException("Connection with auth-service is failed"));
     }
 }

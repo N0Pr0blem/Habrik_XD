@@ -2,13 +2,15 @@ package com.image_service.image_service.dto;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import lombok.Builder;
 import lombok.Data;
-import org.springframework.web.multipart.MultipartFile;
 
 @Data
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class SaveImageDto {
-    private String imageFolderType;
+@Builder(toBuilder = true)
+public class ValidateTokenDto {
+    private Boolean isValid;
+    private Long id;
     private String username;
-    private MultipartFile multipartFile;
+    private String role;
 }

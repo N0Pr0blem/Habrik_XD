@@ -12,4 +12,5 @@ public class ValidateTokenDto {
     private Boolean isValid;
     private String username;
     private String role;
+    private Long id;
 }
