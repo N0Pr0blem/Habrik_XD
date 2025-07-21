@@ -18,6 +18,24 @@ services:
       retries: 5
       start_period: 10s
 
+  postgres-article:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: ${POSTGRES_ARTICLE_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_ARTICLE_PASSWORD}
+      POSTGRES_DB: article_db
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_article_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_ARTICLE_USER} -d article_db" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+
   pgadmin:
     image: dpage/pgadmin4:latest
     environment:
@@ -99,7 +117,21 @@ services:
       - user-service
       - auth-service
 
+  article-service:
+    build: ./article-service
+    ports:
+      - "8084:8084"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-article:5432/article_db
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_ARTICLE_USER}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_ARTICLE_PASSWORD}
+      SERVER_PORT: 8084
+    depends_on:
+      postgres-article:
+        condition: service_healthy
+
 volumes:
   postgres_user_data:
+  postgres_article_data:
   minio_data:
   pgadmin_data:
