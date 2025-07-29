@@ -1,0 +1,15 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres:15
+    container_name: article_db_container
+    environment:
+      POSTGRES_DB: articlesDb
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: 1111
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+volumes:
+  pgdata:
