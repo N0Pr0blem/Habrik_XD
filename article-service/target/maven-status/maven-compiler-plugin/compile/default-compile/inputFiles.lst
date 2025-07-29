@@ -5,6 +5,8 @@ E:\Habrik\Habrik_Repo\article-service\src\main\java\com\example\article_service\
 E:\Habrik\Habrik_Repo\article-service\src\main\java\com\example\article_service\exception\InvalidSlugException.java
 E:\Habrik\Habrik_Repo\article-service\src\main\java\com\example\article_service\DTO\user\UserResponseDto.java
 E:\Habrik\Habrik_Repo\article-service\src\main\java\com\example\article_service\repo\TagRepo.java
+E:\Habrik\Habrik_Repo\article-service\src\main\java\com\example\article_service\DTO\user\ValidateTokenDto.java
+E:\Habrik\Habrik_Repo\article-service\src\main\java\com\example\article_service\client\SecurityClient.java
 E:\Habrik\Habrik_Repo\article-service\src\main\java\com\example\article_service\controller\ArticleController.java
 E:\Habrik\Habrik_Repo\article-service\src\main\java\com\example\article_service\exception\ArticleNotFoundException.java
 E:\Habrik\Habrik_Repo\article-service\src\main\java\com\example\article_service\ArticleServiceApplication.java
@@ -12,7 +14,10 @@ E:\Habrik\Habrik_Repo\article-service\src\main\java\com\example\article_service\
 E:\Habrik\Habrik_Repo\article-service\src\main\java\com\example\article_service\DTO\article\ArticleUpdateDto.java
 E:\Habrik\Habrik_Repo\article-service\src\main\java\com\example\article_service\DTO\article\ArticleResponseDto.java
 E:\Habrik\Habrik_Repo\article-service\src\main\java\com\example\article_service\util\MarkdownUtils.java
+E:\Habrik\Habrik_Repo\article-service\src\main\java\com\example\article_service\exception\AuthorizationException.java
 E:\Habrik\Habrik_Repo\article-service\src\main\java\com\example\article_service\util\DiffUtils.java
+E:\Habrik\Habrik_Repo\article-service\src\main\java\com\example\article_service\exception\TokenNotValidException.java
+E:\Habrik\Habrik_Repo\article-service\src\main\java\com\example\article_service\security\TokenProcessor.java
 E:\Habrik\Habrik_Repo\article-service\src\main\java\com\example\article_service\service\TagService.java
 E:\Habrik\Habrik_Repo\article-service\src\main\java\com\example\article_service\model\Tag.java
 E:\Habrik\Habrik_Repo\article-service\src\main\java\com\example\article_service\DTO\article\ArticlePreviewDto.java

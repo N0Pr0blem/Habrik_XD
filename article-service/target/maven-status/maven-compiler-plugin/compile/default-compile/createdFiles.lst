@@ -1,6 +1,8 @@
 com\example\article_service\client\UserClient.class
+com\example\article_service\DTO\user\ValidateTokenDto.class
 com\example\article_service\exception\ArticleNotFoundException.class
 com\example\article_service\repo\TagRepo.class
+com\example\article_service\security\TokenProcessor.class
 com\example\article_service\DTO\article\ArticleRequestDto.class
 com\example\article_service\DTO\article\ArticlePreviewDto.class
 com\example\article_service\service\ArticleService.class
@@ -13,6 +15,9 @@ com\example\article_service\controller\ArticleController.class
 com\example\article_service\service\TagService.class
 com\example\article_service\DTO\article\ArticleUpdateDto.class
 com\example\article_service\DTO\user\UserResponseDto.class
+com\example\article_service\client\SecurityClient.class
 com\example\article_service\ArticleServiceApplication.class
+com\example\article_service\exception\TokenNotValidException.class
 com\example\article_service\model\Tag.class
+com\example\article_service\exception\AuthorizationException.class
 com\example\article_service\exception\InvalidSlugException.class

@@ -1,10 +1,15 @@
 package com.example.article_service.DTO.article;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+
 import java.util.Date;
 import java.util.List;
 
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class ArticleUpdateDto {
     private Long id;
+    private Long authorId;
     private String title;
     private String preview;
     private String previewImageUrl;
@@ -12,8 +17,9 @@ public class ArticleUpdateDto {
     private List<String> tags;
     private Date updatedAt;
 
-    public ArticleUpdateDto(Long id, String title, String preview, String previewImageUrl, String content, List<String> tags, Date updatedAt) {
+    public ArticleUpdateDto(Long id, Long authorId, String title, String preview, String previewImageUrl, String content, List<String> tags, Date updatedAt) {
         this.id = id;
+        this.authorId = authorId;
         this.title = title;
         this.preview = preview;
         this.previewImageUrl = previewImageUrl;
@@ -28,6 +34,14 @@ public class ArticleUpdateDto {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getAuthorId() {
+        return authorId;
+    }
+
+    public void setAuthorId(Long authorId) {
+        this.authorId = authorId;
     }
 
     public String getTitle() {

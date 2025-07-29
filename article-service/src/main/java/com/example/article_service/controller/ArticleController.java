@@ -5,7 +5,10 @@ import com.example.article_service.DTO.article.ArticleRequestDto;
 import com.example.article_service.DTO.article.ArticleResponseDto;
 import com.example.article_service.DTO.article.ArticleUpdateDto;
 import com.example.article_service.exception.InvalidSlugException;
+import com.example.article_service.security.TokenProcessor;
 import com.example.article_service.service.ArticleService;
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/articles")
 public class ArticleController {
-
+    @Autowired
     private final ArticleService articleService;
 
     public ArticleController(ArticleService articleService) {
@@ -28,20 +31,21 @@ public class ArticleController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<ArticleResponseDto> saveArticle(@RequestBody ArticleRequestDto articleRequestDto) {
-        ArticleResponseDto articleResponseDto;
-        articleResponseDto = articleService.createNewArticle(articleRequestDto);
+    public ResponseEntity<ArticleResponseDto> saveArticle(@RequestBody ArticleRequestDto articleRequestDto, HttpServletRequest httpServletRequest) {
+        ArticleResponseDto articleResponseDto = articleService.createNewArticle(articleRequestDto, httpServletRequest);
         return ResponseEntity.ok(articleResponseDto);
     }
 
     @GetMapping("/update/{id}")
-    public ResponseEntity<ArticleResponseDto> updateArticle(@PathVariable Long id) {
-        return ResponseEntity.status(HttpStatus.OK).body(articleService.getArticleResponseById(id));
+    public ResponseEntity<ArticleResponseDto> updateArticle(@PathVariable Long id, HttpServletRequest httpServletRequest) {
+        ArticleResponseDto articleResponseDto = (articleService.getArticleResponseByIdWithValidation(id, httpServletRequest));
+        return ResponseEntity.status(HttpStatus.OK).body(articleResponseDto);
     }
 
     @PostMapping("/update/{id}")
-    public ResponseEntity<ArticleUpdateDto> updateArticle(@PathVariable Long id, @RequestBody ArticleUpdateDto articleUpdateDto) {
-        return ResponseEntity.status(HttpStatus.OK).body(articleService.updateArticleByResponse(articleUpdateDto));
+    public ResponseEntity<ArticleUpdateDto> updateArticle(@PathVariable Long id, @RequestBody ArticleUpdateDto articleUpdateDto,
+                                                          HttpServletRequest httpServletRequest) {
+        return ResponseEntity.status(HttpStatus.OK).body(articleService.updateArticleByResponse(articleUpdateDto, httpServletRequest));
     }
 
     @GetMapping("/{id}/{slug}")
@@ -63,5 +67,4 @@ public class ArticleController {
                 .header("Location", fullUrl)
                 .build();
     }
-
 }

@@ -12,15 +12,13 @@ public class ArticleRequestDto {
     private String previewImageUrl;
     private String preview;
     private List<String> tags;
-    private Long authorId;
 
-    public ArticleRequestDto(String title, String content, String previewImageUrl, String preview, List<String> tags, Long authorId) {
+    public ArticleRequestDto(String title, String content, String previewImageUrl, String preview, List<String> tags) {
         this.title = title;
         this.content = content;
         this.previewImageUrl = previewImageUrl;
         this.preview = preview;
         this.tags = tags;
-        this.authorId = authorId;
     }
 
     public String getTitle() {
@@ -45,14 +43,6 @@ public class ArticleRequestDto {
 
     public void setTags(List<String> tags) {
         this.tags = tags;
-    }
-
-    public Long getAuthorId() {
-        return authorId;
-    }
-
-    public void setAuthorId(Long authorId) {
-        this.authorId = authorId;
     }
 
     public String getPreview() {
